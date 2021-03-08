@@ -14,7 +14,7 @@ class Character():
         #These are needed for the image animation
         self.origImageRect = copy.copy(self.imageRect)
         self.patchNumber = 0; #Start at the initial patch
-        self.numPatches = 4;  #Only use 4 patches
+        self.numPatches = 13;  #Only use 4 patches
         self.frameCount = 0;  #Start at intial frame
         self.animationFrameRate = 10;
 
@@ -32,7 +32,7 @@ class Character():
             self.patchNumber = 0
             self.imageRect = copy.copy(self.origImageRect)
                
-        #print(f"Patch Number: {self.patchNumber}   Image Rect: {self.imageRect}  {self.origImageRect}")
+        print(f"Patch Number: {self.patchNumber}   Image Rect: {self.imageRect}  {self.origImageRect}")
         
 
     def update(self):
@@ -61,9 +61,9 @@ def main():
     wizardImage = pygame.image.load("images//dungeon//frames//wizzard_f_idle_anim_f1.png")
     #spriteSheet = pygame.image.load("images//dungeon//0x72_DungeonTilesetII_v1.3.png")
     spriteSheet = pygame.image.load("images//dino//sheets//doux.png")
-    spriteSheet = pygame.transform.scale2x(spriteSheet)
+    spriteSheet = pygame.image.load("images//Skeleton Walk.png")
     
-
+    
  
  
  
@@ -73,7 +73,8 @@ def main():
 #Instead of just having a list for my circles, I will have a list for ALL of my sprites
     allSprites = []
     for i in range(1):
-        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [248,0,48,70]) )
+        #allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [124,0,24,35]) )
+        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [0,0,22,34]) )
 
     while True:
         ev = pygame.event.poll()    # Look for any event

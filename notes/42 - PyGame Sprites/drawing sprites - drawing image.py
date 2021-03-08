@@ -4,6 +4,8 @@ import random
 class Ball():
     
     def __init__(self, posIn, sizeIn, colorIn):
+        """ Create and initialize a ball with the given postision, size and color """
+
         self.pos = posIn
         self.size = sizeIn
         self.color = colorIn 
@@ -11,30 +13,30 @@ class Ball():
     def draw(self, surfaceIn):
         pygame.draw.circle(surfaceIn, self.color, self.pos, self.size)
         
+    #Add a default behaviour to my ball.  In this case move across the screen
+    def update(self):
+        self.move(1,0)
+        
     def move(self, xIn=0, yIn=0):
         self.pos[0] += xIn
         self.pos[1] += yIn
         
-
-   
-class Character():
+class Wizard():
     
-    def __init__(self, imgIn, posIn):
-        self.image = imgIn
+    def __init__(self, imageIn, posIn):
+        """ Create and initialize a wizard at this location on the board """
+        self.image = imageIn
         self.pos = posIn
 
+    def draw(self, surfaceIn):
+        surfaceIn.blit(self.image, self.pos)
+
     def update(self):
-        return
-
-    def draw(self, target_surface):
-        return
-
-    def handle_click(self):
-        return
-
-    def contains_point(self, pt):
-        # Use code from QueenSprite here
-        return
+        self.move(1,0)
+        
+    def move(self, xIn=0, yIn=0):
+        self.pos[0] += xIn
+        self.pos[1] += yIn
     
     
 def main():
@@ -47,18 +49,20 @@ def main():
     # Create surface of (width, height), and its window.
     mainSurface = pygame.display.set_mode((surfaceSize, surfaceSize))
     
-    #Load Game Resources  ##1
-    spriteSheet = pygame.image.load("images//0x72_DungeonTilesetII_v1.3.png")
-    
-    #Load a knight
-    knight = Character(spriteSheet,[200,200])
+    wizardImage = pygame.image.load("images//dungeon//frames//wizzard_f_idle_anim_f1.png")
 
-    # Create the ball object using it's position, size and color
-    circle = Ball([50,100], 30, (255, 0, 0))        # A color is a mix of (Red, Green, Blue)
-    
-    circles = []
+ 
+ 
+ 
+#     circles = []
+#     for i in range(5):
+#         circles.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
+#Instead of just having a list for my circles, I will have a list for ALL of my sprites
+    allSprites = []
     for i in range(5):
-        circles.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
+        allSprites.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
+    ##2#
+    allSprites.append( Wizard( wizardImage, [0,random.randrange(surfaceSize)]) )
 
     while True:
         ev = pygame.event.poll()    # Look for any event
@@ -71,16 +75,11 @@ def main():
         # So first fill everything with the background color
         mainSurface.fill((0, 200, 255))
 
-        
-        #Move the circle
-        #circle.pos[0] += 1  #TODO: Replace with with the move() method.
-        circle.move(1,0)
-        # Draw the circle on the surface
-        circle.draw(mainSurface)
-        
-        for i in range(len(circles)):
-            circles[i].move(1,0)
-            circles[i].draw(mainSurface)
+
+        #Loop through all of the sprites        
+        for i in range(len(allSprites)):
+            allSprites[i].update()
+            allSprites[i].draw(mainSurface)
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()

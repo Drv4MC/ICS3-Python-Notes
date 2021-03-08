@@ -1,27 +1,7 @@
 import pygame
 import random
-
-class Ball():
-    
-    def __init__(self, posIn, sizeIn, colorIn):
-        """ Create and initialize a ball with the given postision, size and color """
-
-        self.pos = posIn
-        self.size = sizeIn
-        self.color = colorIn 
-        
-    def draw(self, surfaceIn):
-        pygame.draw.circle(surfaceIn, self.color, self.pos, self.size)
-        
-    #Add a default behaviour to my ball.  In this case move across the screen
-    def update(self):
-        self.move(1,0)
-        
-    def move(self, xIn=0, yIn=0):
-        self.pos[0] += xIn
-        self.pos[1] += yIn
-        
-class Wizard():
+     
+class Character():
     
     def __init__(self, imageIn, posIn):
         """ Create and initialize a wizard at this location on the board """
@@ -29,7 +9,10 @@ class Wizard():
         self.pos = posIn
 
     def draw(self, surfaceIn):
-        surfaceIn.blit(self.image, self.pos)
+        #surfaceIn.blit(self.image, self.pos)
+        #Kinda fun to have EVERY Image, but let's just get the patch we need
+        surfaceIn.blit(self.image, self.pos, [130,165,16,28])  #Positions found using msPaint
+        
 
     def update(self):
         self.move(1,0)
@@ -49,7 +32,8 @@ def main():
     # Create surface of (width, height), and its window.
     mainSurface = pygame.display.set_mode((surfaceSize, surfaceSize))
     
-    wizardImage = pygame.image.load("images//frames//wizzard_f_idle_anim_f1.png")
+    wizardImage = pygame.image.load("images//dungeon//frames//wizzard_f_idle_anim_f1.png")
+    spriteSheet = pygame.image.load("images//dungeon//0x72_DungeonTilesetII_v1.3.png")
 
  
  
@@ -60,9 +44,7 @@ def main():
 #Instead of just having a list for my circles, I will have a list for ALL of my sprites
     allSprites = []
     for i in range(5):
-        allSprites.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
-    ##2#
-    allSprites.append( Wizard( wizardImage, [0,random.randrange(surfaceSize)]) )
+        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)]) )
 
     while True:
         ev = pygame.event.poll()    # Look for any event

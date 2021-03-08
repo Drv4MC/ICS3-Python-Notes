@@ -1,21 +1,47 @@
 import pygame
 import random
-     
+import copy
+
+#Wizard Rect: [130,165,16,28]
 class Character():
     
-    def __init__(self, imageIn, posIn):
+    def __init__(self, imageIn, posIn, imageRectIn):
         """ Create and initialize a wizard at this location on the board """
         self.image = imageIn
+        self.imageRect = imageRectIn
         self.pos = posIn
+        
+        #These are needed for the image animation
+        self.origImageRect = copy.copy(self.imageRect)
+        self.patchNumber = 0; #Start at the initial patch
+        self.numPatches = 4;  #Only use 4 patches
+        self.frameCount = 0;  #Start at intial frame
+        self.animationFrameRate = 10;
 
     def draw(self, surfaceIn):
         #surfaceIn.blit(self.image, self.pos)
         #Kinda fun to have EVERY Image, but let's just get the patch we need
-        surfaceIn.blit(self.image, self.pos, [130,165,16,28])  #Positions found using msPaint
+        surfaceIn.blit(self.image, self.pos,  self.imageRect)  #Positions found using msPaint
+
+    def updateImageRect(self):
+        #update the imageRect to show the next image
+        if (self.patchNumber < self.numPatches-1) :
+            self.patchNumber += 1
+            self.imageRect[0] += self.imageRect[2]
+        else:
+            self.patchNumber = 0
+            self.imageRect = copy.copy(self.origImageRect)
+               
+        #print(f"Patch Number: {self.patchNumber}   Image Rect: {self.imageRect}  {self.origImageRect}")
         
 
     def update(self):
-        self.move(1,0)
+        
+        self.frameCount += 1
+        if (self.frameCount % self.animationFrameRate == 0):
+            self.updateImageRect()
+        
+        self.move(0.5,0)
         
     def move(self, xIn=0, yIn=0):
         self.pos[0] += xIn
@@ -32,8 +58,11 @@ def main():
     # Create surface of (width, height), and its window.
     mainSurface = pygame.display.set_mode((surfaceSize, surfaceSize))
     
-    wizardImage = pygame.image.load("images//frames//wizzard_f_idle_anim_f1.png")
-    spriteSheet = pygame.image.load("images//0x72_DungeonTilesetII_v1.3.png")
+    wizardImage = pygame.image.load("images//dungeon//frames//wizzard_f_idle_anim_f1.png")
+    #spriteSheet = pygame.image.load("images//dungeon//0x72_DungeonTilesetII_v1.3.png")
+    spriteSheet = pygame.image.load("images//dino//sheets//doux.png")
+    spriteSheet = pygame.transform.scale2x(spriteSheet)
+    
 
  
  
@@ -43,8 +72,9 @@ def main():
 #         circles.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
 #Instead of just having a list for my circles, I will have a list for ALL of my sprites
     allSprites = []
-    for i in range(5):
-        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)]) )
+    for i in range(1):
+#       allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [124,0,24,35]) )
+        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [248,0,48,70]) )
 
     while True:
         ev = pygame.event.poll()    # Look for any event

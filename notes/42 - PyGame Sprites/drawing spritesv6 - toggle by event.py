@@ -1,3 +1,6 @@
+#TODO ADD KEYBOARD Control to make the character move left and right
+#TODO Make the sprite would move when clicked
+
 import pygame
 import random
 import copy
@@ -17,13 +20,16 @@ class Character():
         self.numPatches = 4;  #Only use 4 patches
         self.frameCount = 0;  #Start at intial frame
         self.animationFrameRate = 10;
+        
+        #Now let's control the character
+        self.canMove = False
 
     def draw(self, surfaceIn):
         #surfaceIn.blit(self.image, self.pos)
         #Kinda fun to have EVERY Image, but let's just get the patch we need
         surfaceIn.blit(self.image, self.pos,  self.imageRect)  #Positions found using msPaint
-        
-        
+
+    def updateImageRect(self):
         #update the imageRect to show the next image
         if (self.patchNumber < self.numPatches-1) :
             self.patchNumber += 1
@@ -31,18 +37,25 @@ class Character():
         else:
             self.patchNumber = 0
             self.imageRect = copy.copy(self.origImageRect)
-        
-        
-        
-        print(f"Patch Number: {self.patchNumber}   Image Rect: {self.imageRect}  {self.origImageRect}")
+               
+        #print(f"Patch Number: {self.patchNumber}   Image Rect: {self.imageRect}  {self.origImageRect}")
         
 
     def update(self):
-        self.move(1,0)
+        if self.canMove: 
+            self.frameCount += 1
+            if (self.frameCount % self.animationFrameRate == 0):
+                self.updateImageRect()
+            
+            self.move(0.5,0)
         
     def move(self, xIn=0, yIn=0):
         self.pos[0] += xIn
         self.pos[1] += yIn
+    
+    def toggleMovement(self):
+        self.canMove = not self.canMove
+        
     
     
 def main():
@@ -58,6 +71,8 @@ def main():
     wizardImage = pygame.image.load("images//dungeon//frames//wizzard_f_idle_anim_f1.png")
     #spriteSheet = pygame.image.load("images//dungeon//0x72_DungeonTilesetII_v1.3.png")
     spriteSheet = pygame.image.load("images//dino//sheets//doux.png")
+    spriteSheet = pygame.image.load("images//Skeleton Walk.png")
+    spriteSheet = pygame.transform.scale2x(spriteSheet)
     
 
  
@@ -68,14 +83,20 @@ def main():
 #         circles.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
 #Instead of just having a list for my circles, I will have a list for ALL of my sprites
     allSprites = []
-    for i in range(1):
-        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [124,0,24,35]) )
+    for i in range(10):
+        #allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [248,0,48,70]) )
+        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [0,0,44,64]) )
+
 
     while True:
         ev = pygame.event.poll()    # Look for any event
         if ev.type == pygame.QUIT:  # Window close button clicked?
             break                   #   ... leave game loop
-
+        elif ev.type == pygame.MOUSEBUTTONDOWN:
+            for i in range(len(allSprites)):
+                allSprites[i].toggleMovement()
+        
+        #
         # Update your game objects and data structures here...
 
         # We draw everything from scratch on each frame.
@@ -91,7 +112,7 @@ def main():
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
         
-        clock.tick(5) #Force frame rate to be slower
+        clock.tick(60) #Force frame rate to be slower
 
     pygame.quit()     # Once we leave the loop, close the window.
 

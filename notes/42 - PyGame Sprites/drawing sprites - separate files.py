@@ -1,3 +1,6 @@
+#TODO ADD KEYBOARD Control to make the character move left and right
+#TODO Make the sprite would move when clicked
+
 import pygame
 import random
 import copy
@@ -79,6 +82,8 @@ def main():
 #         circles.append(Ball([random.randrange(surfaceSize),random.randrange(surfaceSize)], 30, (0, 0, 0)) )
 #Instead of just having a list for my circles, I will have a list for ALL of my sprites
     allSprites = []
+    for i in range(10):
+        allSprites.append( Character( spriteSheet, [0,random.randrange(surfaceSize)], [248,0,48,70]) )
 
 
     while True:
@@ -87,7 +92,9 @@ def main():
             break                   #   ... leave game loop
         elif ev.type == pygame.MOUSEBUTTONDOWN:
             for i in range(len(allSprites)):
-                allSprites.toggleMovement()
+                allSprites[i].toggleMovement()
+        
+        #
         # Update your game objects and data structures here...
 
         # We draw everything from scratch on each frame.

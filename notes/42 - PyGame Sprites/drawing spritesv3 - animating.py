@@ -7,12 +7,12 @@ class Character():
     
     def __init__(self, imageIn, posIn, imageRectIn):
         """ Create and initialize a wizard at this location on the board """
-        self.image = imageIn
-        self.imageRect = imageRectIn
-        self.pos = posIn
+        self.image = imageIn #The entire image file
+        self.imageRect = imageRectIn #The current part of image to display
+        self.pos = posIn #The x and y position of the character
         
         #These are needed for the image animation
-        self.origImageRect = copy.copy(self.imageRect)
+        self.origImageRect = copy.deepcopy(self.imageRect)
         self.patchNumber = 0; #Start at the initial patch
         self.numPatches = 4;  #Only use 4 patches
         self.frameCount = 0;  #Start at intial frame
@@ -22,8 +22,8 @@ class Character():
         #surfaceIn.blit(self.image, self.pos)
         #Kinda fun to have EVERY Image, but let's just get the patch we need
         surfaceIn.blit(self.image, self.pos,  self.imageRect)  #Positions found using msPaint
-
-    def updateImageRect(self):
+        
+        
         #update the imageRect to show the next image
         if (self.patchNumber < self.numPatches-1) :
             self.patchNumber += 1
@@ -31,17 +31,14 @@ class Character():
         else:
             self.patchNumber = 0
             self.imageRect = copy.copy(self.origImageRect)
-               
+        
+        
+        
         print(f"Patch Number: {self.patchNumber}   Image Rect: {self.imageRect}  {self.origImageRect}")
         
 
     def update(self):
-        
-        self.frameCount += 1
-        if (self.frameCount % self.animationFrameRate == 0):
-            self.updateImageRect()
-        
-        self.move(0.5,0)
+        self.move(1,0)
         
     def move(self, xIn=0, yIn=0):
         self.pos[0] += xIn
@@ -62,6 +59,7 @@ def main():
     #spriteSheet = pygame.image.load("images//dungeon//0x72_DungeonTilesetII_v1.3.png")
     spriteSheet = pygame.image.load("images//dino//sheets//doux.png")
     
+
  
  
  
@@ -93,7 +91,7 @@ def main():
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
         
-        clock.tick(60) #Force frame rate to be slower
+        clock.tick(5) #Force frame rate to be slower
 
     pygame.quit()     # Once we leave the loop, close the window.
 
